@@ -1,4 +1,4 @@
-# GigShield — AI-Powered Microinsurance for Gig & Delivery Workers
+#  AI Disruption Index (ADI) – Smart Income Protection for Gig Workers
 
 A full-stack AI-driven microinsurance platform that protects gig economy delivery workers from income loss caused by environmental disruptions — bad weather, traffic congestion, poor air quality, and zone restrictions. It uses real-time external data to automatically assess risk, trigger claims, detect fraud, and process instant payouts.
 
