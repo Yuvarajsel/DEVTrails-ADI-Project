@@ -13,12 +13,14 @@ A full-stack AI-driven microinsurance platform that protects gig economy deliver
 
 ## Built With
 
+> **Open Source First:** This platform is modeled using **Open Source** technologies and **Open/Free APIs**!
+
 * **Frontend**: React.js
 * **Backend**: Node.js, Express.js
 * **Database**: MongoDB
-* **AI Engine**: Python (scikit-learn / pandas)
-* **Payment Gateway & Payouts**: Razorpay API (Instant UPI)
-* **External Live APIs**: OpenWeatherMap (Weather), AQICN (Air Quality), TomTom (Traffic)
+* **AI Engine**: Python (scikit-learn, pandas)
+* **Payment Gateway**: Razorpay API *(Developer Sandbox)*
+* **External Live APIs**: OpenWeatherMap *(Open Weather Data)*, AQICN *(Open Air Quality Data)*, TomTom Traffic *(Open Traffic APIs)*
 
 ## Repository Layout
 
