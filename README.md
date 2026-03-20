@@ -127,21 +127,50 @@ This project is organised as a full-stack AI-powered insurance platform with cle
 - Python-based ML models compute the ADI score (0–100) from real-time features.
 - Fraud detection model scores claims as Low / Medium / High risk.
 
-**Data & Flow:**
+**Data & Flow (The AI Disruption Index - ADI):**
 
-1. External APIs (Weather, AQI, Traffic, Delivery Demand, Zone Restrictions) feed real-time data into the system.
-2. The AI engine processes these into an **ADI score (0–100)**.
-3. When ADI exceeds the threshold (60 for partial, 75 for full payout), a claim is automatically triggered.
-4. Every claim passes through the **Fraud Detection Engine** — validated against GPS, activity logs, duplicates, historical patterns, and real API data.
-5. Approved claims trigger **instant UPI payouts** via Razorpay to the worker's account.
+### 1. Basic Idea
+Normally, insurance systems trigger payouts using one condition, like heavy rain, flood, or pollution. But in reality, delivery workers lose income because of multiple factors together. So instead of checking one condition, we create an AI Disruption Index (ADI) that measures how much the environment is disrupting delivery work. When the score becomes high, the worker automatically receives an insurance payout.
 
-### ADI Score Thresholds
+### 2. What is ADI (AI Disruption Index)?
+ADI is a number between 0 and 100.
+| ADI Score  | Meaning                                |
+|------------|----------------------------------------|
+| **0–30**   | Normal conditions                      |
+| **30–60**  | Moderate disruption                    |
+| **60–100** | Severe disruption → payout triggered   |
+*(Example: ADI = 75 means the delivery worker cannot work properly, so the system automatically compensates income loss.)*
 
-| ADI Range   | Condition         | Action                            |
-|-------------|-------------------|-----------------------------------|
-| 0 – 59      | Normal            | No claim triggered                |
-| 60 – 75     | High Disruption   | Partial compensation payout       |
-| 75 – 100    | Severe Disruption | Full payout automatically triggered |
+### 3. Data Used to Calculate ADI
+The AI collects data from multiple sources:
+1. **Weather Data** (APIs): Rainfall, Temperature, Storm alerts. *Example: Heavy rain → increases disruption score.*
+2. **Traffic Data** (APIs): Road blockage, Congestion, Accidents. *Example: Traffic heavily congested → deliveries slow down.*
+3. **Pollution Data** (AQI APIs): AQI level. *Example: AQI > 400 → unsafe for outdoor work.*
+4. **Delivery Demand Data**: Number of orders. *Example: Orders drop suddenly → worker income reduces.*
+5. **Government Alerts**: Curfew, Strike, Zone closure. *Example: These events directly affect delivery work.*
+
+### 4. AI Calculation Example
+The AI combines all these factors. 
+**Formula Example:** `ADI Score = (0.35 × Weather) + (0.20 × Traffic) + (0.15 × Pollution) + (0.20 × Demand Drop) + (0.10 × Gov Alerts)`
+*Example Values:* Weather=80, Traffic=60, Pollution=20, Demand=70, Gov Alert=0.
+*Calculation:* ADI = 65. Since ADI > 60 → disruption detected.
+
+### 5. Real Scenario Example
+**Worker**: Arjun (Zomato delivery partner)  
+**Situation**: Heavy rain in city, traffic jam, many orders cancelled.  
+**AI Calculates**: Weather risk = 85, Traffic risk = 70, Demand drop = 60.  
+**ADI Result**: **72**. System detects severe disruption.
+
+### 6. Automatic Insurance Flow
+1. **Worker Registration**: Worker chooses weekly insurance (e.g., ₹20 per week).
+2. **Real-Time Monitoring**: The system continuously monitors weather, traffic, pollution, and delivery activity.
+3. **ADI Calculation**: AI calculates disruption score.
+4. **Claim Trigger**: If ADI > 60: Claim is automatically triggered (zero manual application).
+5. **Income Compensation**: Worker normally earns ₹120/hr. Disruption duration 4 hours. Compensation: ₹120 × 4 = ₹480 sent via UPI / payment gateway.
+
+### 7. Fraud Detection (Important for Judges)
+AI checks: Worker GPS location, Weather data, Traffic conditions.
+*Example*: Worker claims rain but weather API shows clear weather. System flags fraud claim.
 
 ### Fraud Risk Scoring
 
@@ -155,15 +184,66 @@ This project is organised as a full-stack AI-powered insurance platform with cle
 
 **System Architecture:**
 
-![System Architecture](System_Architecture_Diagram.png)
+```mermaid
+graph TD
+    Client["Client (React.js Dashboard)"]
+    Server["Server (Node.js/Express)"]
+    DB[(MongoDB)]
+    AI["AI Engine (Python/ML)"]
+    ExtAPI["External APIs (Weather, AQI, Traffic)"]
+    Payment["Payment Gateway (Razorpay/UPI)"]
+
+    Client <-->|REST API| Server
+    Server <-->|Read/Write| DB
+    Server <-->|Fetch Live Data| ExtAPI
+    Server <-->|Trigger ADI/Fraud Check| AI
+    Server <-->|Instant Payouts| Payment
+```
 
 **ADI Model Flow:**
 
-![ADI Model Flow](ADI%20Model%20Flow%20Diagram.png)
+```mermaid
+graph LR
+    Weather[Weather API]
+    AQI[AQI API]
+    Traffic[Traffic API]
+    Demand[Delivery Demand]
+    Gov[Gov Alerts]
+
+    Weather --> Engine
+    AQI --> Engine
+    Traffic --> Engine
+    Demand --> Engine
+    Gov --> Engine
+
+    subgraph "AI Engine"
+        Engine[ADI Score Calculator]
+    end
+
+    Engine --> Score[ADI Score 0-100]
+    
+    Score -->|0-30| Normal[Normal: No Action]
+    Score -->|30-60| Moderate[Moderate Disruption]
+    Score -->|60-100| Severe[Severe Disruption: Payout Triggered]
+```
 
 **Fraud Detection Pipeline:**
 
-![Fraud Detection Pipeline](Fraud%20Detection%20Pipeline%20Diagram.png)
+```mermaid
+flowchart TD
+    Claim[Claim Triggered] --> C1
+    
+    subgraph "Fraud Detection Engine (AI Verification)"
+        C1[Worker GPS Location Check] --> C2[Weather API Match]
+        C2 --> C3[Traffic Data Match]
+    end
+
+    C3 --> Risk{Risk Assessment}
+    
+    Risk -->|Low Risk| Approve[Auto-Approve & Fast Payout]
+    Risk -->|Medium Risk| Flag[Flag for Manual Review]
+    Risk -->|High Risk| Reject[Reject Fraud Claim]
+```
 
 ## Development Notes
 
