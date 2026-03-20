@@ -191,6 +191,15 @@ AI checks: Worker GPS location, Weather data, Traffic conditions.
 | Medium Risk    | Flag for manual review    |
 | High Risk      | Reject claim              |
 
+## Adversarial Defense & Anti-Spoofing Strategy 🚨
+*Addressing the 24-Hour Market Shift Requirement*
+
+To defend our liquidity pool against sophisticated GPS-spoofing syndicates, simple location verification is obsolete. We have integrated a robust, three-tiered defense architecture:
+
+1. **The Differentiation (Anomaly Detection):** Our Machine Learning architecture establishes a baseline of the physical characteristics of a genuine storm. We utilize an Anomaly Detection Pipeline (Isolation Forests) to separate organic movement from synthetic spoofing. Bad actors teleport or sit unnaturally still; our model flags data that mathematically deviates from the physical reality of navigating a severe weather event.
+2. **The Data (Sensor Fusion & Metadata):** We look beyond GPS coordinates. Our system analyzes background sensor fusion: micro-movements on the accelerometer/gyroscope, and localized barometric pressure drops indicative of actual storm systems versus climate-controlled indoor environments. Additionally, we check network metadata—if multiple claims hit our system from different "locations" but share the same Wi-Fi MAC address (BSSID), it indicates a coordinated, single-room attack.
+3. **The UX Balance (Graceful Degradation):** We protect honest gig workers whose GPS might simply be glitching due to heavy cloud cover. Instead of instantly banning flagged accounts, we employ an intermediate "Challenge-Response" state. Flagged payouts are paused, and the worker is prompted for low-bandwidth secondary verification (e.g., capturing a live, real-time photo to extract fresh EXIF data validating the weather).
+
 ## Architecture Diagrams
 
 **System Architecture:**
