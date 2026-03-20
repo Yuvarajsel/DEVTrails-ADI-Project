@@ -11,6 +11,15 @@ A full-stack AI-driven microinsurance platform that protects gig economy deliver
 - **Worker dashboard** with real-time ADI scores, active policies, claim history, and payout tracking
 - **Policy management** with affordable microinsurance plans designed for gig workers
 
+## Built With
+
+* **Frontend**: React.js
+* **Backend**: Node.js, Express.js
+* **Database**: MongoDB
+* **AI Engine**: Python (scikit-learn / pandas)
+* **Payment Gateway & Payouts**: Razorpay API (Instant UPI)
+* **External Live APIs**: OpenWeatherMap (Weather), AQICN (Air Quality), TomTom (Traffic)
+
 ## Repository Layout
 
 ```
